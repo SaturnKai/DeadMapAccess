@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DeadMapAccess;
 
-[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0")]
+[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0.1")]
 public class DeadMap : BaseUnityPlugin
 {
     internal static DeadMap Instance { get; private set; } = null!;
