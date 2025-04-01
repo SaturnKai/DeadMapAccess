@@ -72,29 +72,6 @@ public class DeadMap : BaseUnityPlugin
         // animate map
         scale = Mathf.Lerp(scale, targetScale, Time.deltaTime * scaleSpeed);
 
-        // update map texture
-        if (renderTexture != null) {
-
-            // initialize main texture if unset
-            if (mapTexture == null) {
-                int width = renderTexture.width + 2 * borderSize.Value;
-                int height = renderTexture.height + 2 * borderSize.Value;
-                mapTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
-
-                // fill map with border color
-                Color[] pixels = new Color[mapTexture.width * mapTexture.height];
-                for (int i = 0; i < pixels.Length; i++) {
-                    pixels[i] = borderColor;
-                }
-                mapTexture.SetPixels(pixels);
-            }
-
-            RenderTexture.active = renderTexture;
-            mapTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), borderSize.Value, borderSize.Value);
-            mapTexture.Apply();
-            RenderTexture.active = null;
-        }
-
         // update camera transform
         if (spectating && SpectateCamera.instance != null && SpectateCamera.instance.currentState == SpectateCamera.State.Normal) {
             Transform transform = SpectateCamera.instance.transform;
@@ -106,6 +83,9 @@ public class DeadMap : BaseUnityPlugin
 
             DirtFinderMapPlayer.Instance.PlayerTransform.position = transform.position;
             DirtFinderMapPlayer.Instance.PlayerTransform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+            // update tracer
+            PlayerController.instance.playerAvatarScript.LastNavmeshPosition = SpectateCamera.instance.player.LastNavmeshPosition;
         }
     }
 
@@ -121,6 +101,29 @@ public class DeadMap : BaseUnityPlugin
         }
 
         if (active) {
+            // update map texture
+            if (renderTexture != null) {
+
+                // initialize main texture if unset
+                if (mapTexture == null) {
+                    int width = renderTexture.width + 2 * borderSize.Value;
+                    int height = renderTexture.height + 2 * borderSize.Value;
+                    mapTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+
+                    // fill map with border color
+                    Color[] pixels = new Color[mapTexture.width * mapTexture.height];
+                    for (int i = 0; i < pixels.Length; i++) {
+                        pixels[i] = borderColor;
+                    }
+                    mapTexture.SetPixels(pixels);
+                }
+
+                RenderTexture.active = renderTexture;
+                mapTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), borderSize.Value, borderSize.Value);
+                mapTexture.Apply();
+                RenderTexture.active = null;
+            }
+
             // set map active
             Map.Instance.Active = true;
 
