@@ -10,4 +10,4 @@ Simply use the map key while spectating to see an overlay of the map. Additional
 
 ## Credits
 
-For any bug reports or feedback, there is a thread available for the mod inside the [R.E.P.O Modding Discord Server](https://discord.gg/vPJtKhYAFe).
+Developed by [SaturnKai](https://saturnkai.dev/). For any **bug reports or feedback**, there is a thread available for the mod inside the [R.E.P.O Modding Discord Server](https://discord.gg/vPJtKhYAFe).
