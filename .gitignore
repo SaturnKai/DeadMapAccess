@@ -1,0 +1,6 @@
+# ignore compiled outputs
+bin/
+obj/
+
+# ignore thunderstore build
+plugins/

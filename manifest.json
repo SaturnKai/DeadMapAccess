@@ -1,0 +1,7 @@
+{
+    "name": "Dead_Map_Access",
+    "description": "Allows dead players to open the map while spectating.",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/saturnkai/deadmapaccess",
+    "dependencies": ["BepInEx-BepInExPack-5.4.2100"]
+}
