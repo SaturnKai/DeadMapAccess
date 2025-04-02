@@ -14,9 +14,8 @@ public class DeadMap : BaseUnityPlugin
     internal Harmony? Harmony { get; set; }
     private ManualLogSource _logger => base.Logger;
 
-    // map textures
+    // map texture
     public static RenderTexture? renderTexture = null;
-    private Texture2D? mapTexture = null;
 
     // map flags
     public static bool spectating = false;
@@ -44,7 +43,7 @@ public class DeadMap : BaseUnityPlugin
         // load config
         width = Config.Bind("General", "Width", 600f, "The width of the map.");
         height = Config.Bind("General", "Height", 600f, "The height of the map.");
-        borderSize = Config.Bind("General", "Border", 5, "The size of the map border.");
+        borderSize = Config.Bind("General", "Border", 6, "The size of the map border.");
         toggle = Config.Bind("General", "Toggle", false, "Set the map to toggle instead of hold.");
 
         // patches
