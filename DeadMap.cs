@@ -44,7 +44,7 @@ public class DeadMap : BaseUnityPlugin
         // load config
         width = Config.Bind("General", "Width", 600f, "The width of the map.");
         height = Config.Bind("General", "Height", 600f, "The height of the map.");
-        borderSize = Config.Bind("General", "Border", 3, "The size of the map border.");
+        borderSize = Config.Bind("General", "Border", 5, "The size of the map border.");
         toggle = Config.Bind("General", "Toggle", false, "Set the map to toggle instead of hold.");
 
         // patches
@@ -101,39 +101,26 @@ public class DeadMap : BaseUnityPlugin
         }
 
         if (active) {
-            // update map texture
-            if (renderTexture != null) {
-
-                // initialize main texture if unset
-                if (mapTexture == null) {
-                    int width = renderTexture.width + 2 * borderSize.Value;
-                    int height = renderTexture.height + 2 * borderSize.Value;
-                    mapTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
-
-                    // fill map with border color
-                    Color[] pixels = new Color[mapTexture.width * mapTexture.height];
-                    for (int i = 0; i < pixels.Length; i++) {
-                        pixels[i] = borderColor;
-                    }
-                    mapTexture.SetPixels(pixels);
-                }
-
-                RenderTexture.active = renderTexture;
-                mapTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), borderSize.Value, borderSize.Value);
-                mapTexture.Apply();
-                RenderTexture.active = null;
-            }
-
             // set map active
             Map.Instance.Active = true;
 
             // fade camera
             CameraTopFade.Instance.Set(0.5f, 0.1f);
 
-            // draw map
+            // map position and size
             float currentWidth = width.Value * scale;
             float currentHeight = height.Value * scale;
-            GUI.DrawTexture(new Rect((Screen.width - currentWidth) / 2, (Screen.height - currentHeight) / 2, currentWidth, currentHeight), mapTexture);
+            float x = (Screen.width - currentWidth) / 2;
+            float y = (Screen.height - currentHeight) / 2;
+
+            // draw border
+            Rect border = new(x - borderSize.Value, y - borderSize.Value, currentWidth + borderSize.Value * 2, currentHeight + borderSize.Value * 2);
+            GUI.color = borderColor;
+            GUI.DrawTexture(border, Texture2D.whiteTexture);
+            GUI.color = Color.white;
+
+            // draw map
+            GUI.DrawTexture(new Rect(x, y, currentWidth, currentHeight), renderTexture, ScaleMode.StretchToFill, false);
         } else {
             Map.Instance.Active = false;
             targetScale = 0.5f;
