@@ -66,9 +66,8 @@ public class DeadMap : BaseUnityPlugin
         } else if (spectating)
             active = SemiFunc.InputHold(InputKey.Map);
 
-        targetScale = active ? 1f : 0.5f;
-
         // animate map
+        targetScale = active ? 1f : 0.5f;
         scale = Mathf.Lerp(scale, targetScale, Time.deltaTime * scaleSpeed);
 
         // update camera transform
@@ -89,6 +88,7 @@ public class DeadMap : BaseUnityPlugin
     }
 
     private void OnGUI() {
+        // ensure player is spectating
         if (!spectating)
             return;
 
@@ -99,30 +99,31 @@ public class DeadMap : BaseUnityPlugin
             sound.Play(SpectateCamera.instance.transform.position, 1f, 1f, 1f, 1f);
         }
 
-        if (active) {
-            // set map active
-            Map.Instance.Active = true;
+        // update map instance
+        Map.Instance.Active = active;
 
-            // fade camera
-            CameraTopFade.Instance.Set(0.5f, 0.1f);
-
-            // map position and size
-            float currentWidth = width.Value * scale;
-            float currentHeight = height.Value * scale;
-            float x = (Screen.width - currentWidth) / 2;
-            float y = (Screen.height - currentHeight) / 2;
-
-            // draw border
-            Rect border = new(x - borderSize.Value, y - borderSize.Value, currentWidth + borderSize.Value * 2, currentHeight + borderSize.Value * 2);
-            GUI.color = borderColor;
-            GUI.DrawTexture(border, Texture2D.whiteTexture);
-            GUI.color = Color.white;
-
-            // draw map
-            GUI.DrawTexture(new Rect(x, y, currentWidth, currentHeight), renderTexture, ScaleMode.StretchToFill, false);
-        } else {
-            Map.Instance.Active = false;
+        // inactive map
+        if (!active) {
             targetScale = 0.5f;
+            return;
         }
+
+        // fade camera
+        CameraTopFade.Instance.Set(0.5f, 0.1f);
+
+        // map position and size
+        float currentWidth = width.Value * scale;
+        float currentHeight = height.Value * scale;
+        float x = (Screen.width - currentWidth) / 2;
+        float y = (Screen.height - currentHeight) / 2;
+
+        // draw border
+        Rect border = new(x - borderSize.Value, y - borderSize.Value, currentWidth + borderSize.Value * 2, currentHeight + borderSize.Value * 2);
+        GUI.color = borderColor;
+        GUI.DrawTexture(border, Texture2D.whiteTexture);
+        GUI.color = Color.white;
+
+        // draw map
+        GUI.DrawTexture(new Rect(x, y, currentWidth, currentHeight), renderTexture, ScaleMode.StretchToFill, false);
     }
 }
