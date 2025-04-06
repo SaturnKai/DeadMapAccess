@@ -4,6 +4,7 @@
 
 -   Added the ability to view upgrades while the map is open.
 -   Fixed a compatibility issue with the **MoreChances** mod.
+-   Fixed an issue where the map was attempting to show after death in single player lobbies.
 
 **Version 1.0.2 (2025-04-02)**
 

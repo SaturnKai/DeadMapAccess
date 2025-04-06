@@ -50,13 +50,6 @@ public class DeadMap : BaseUnityPlugin
     internal static void SetSpectating(bool isSpectating) {
         // update spectating state
         spectating = isSpectating;
-
-        // toggle valuables
-        MapValuable[] valuables = Map.Instance.OverLayerParent.GetComponentsInChildren<MapValuable>();
-        foreach (MapValuable v in valuables) {
-            v.gameObject.SetActive(!spectating);
-            Logger.LogInfo($"Set valuable to {!spectating}: {v.name}");
-        }
     }
 
     private void Update() {
