@@ -1,12 +1,11 @@
 using BepInEx;
 using BepInEx.Logging;
-using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
 
 namespace DeadMapAccess;
 
-[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0.2")]
+[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0.3")]
 public class DeadMap : BaseUnityPlugin
 {
     internal static DeadMap Instance { get; private set; } = null!;
@@ -27,13 +26,6 @@ public class DeadMap : BaseUnityPlugin
     private float scale = 0.5f;
     private float targetScale = 1f;
 
-    // map config
-    private readonly Color borderColor = new Color32(19, 19, 19, 255);
-    private static ConfigEntry<float> width = null!;
-    private static ConfigEntry<float> height = null!;
-    private static ConfigEntry<int> borderSize = null!;
-    private static ConfigEntry<bool> toggle = null!;
-
     private void Awake() {
         // init plugin
         Instance = this;
@@ -41,10 +33,7 @@ public class DeadMap : BaseUnityPlugin
         gameObject.hideFlags = HideFlags.HideAndDontSave;
 
         // load config
-        width = Config.Bind("General", "Width", 600f, "The width of the map.");
-        height = Config.Bind("General", "Height", 600f, "The height of the map.");
-        borderSize = Config.Bind("General", "Border", 6, "The size of the map border.");
-        toggle = Config.Bind("General", "Toggle", false, "Set the map to toggle instead of hold.");
+        Configuration.Init(Config);
 
         // patches
         Harmony ??= new Harmony(Info.Metadata.GUID);
@@ -58,9 +47,21 @@ public class DeadMap : BaseUnityPlugin
         Harmony?.UnpatchSelf();
     }
 
+    internal static void SetSpectating(bool isSpectating) {
+        // update spectating state
+        spectating = isSpectating;
+
+        // toggle valuables
+        MapValuable[] valuables = Map.Instance.OverLayerParent.GetComponentsInChildren<MapValuable>();
+        foreach (MapValuable v in valuables) {
+            v.gameObject.SetActive(!spectating);
+            Logger.LogInfo($"Set valuable to {!spectating}: {v.name}");
+        }
+    }
+
     private void Update() {
         // keybinds
-        if (toggle.Value && spectating) {
+        if (Configuration.toggle.Value && spectating) {
             if (SemiFunc.InputDown(InputKey.Map)) 
                 active = !active;
         } else if (spectating)
@@ -84,6 +85,11 @@ public class DeadMap : BaseUnityPlugin
 
             // update tracer
             PlayerController.instance.playerAvatarScript.LastNavmeshPosition = SpectateCamera.instance.player.LastNavmeshPosition;
+
+            // show stats
+            if (active && Configuration.showUpgrades.Value) {
+                StatsUI.instance.Show();
+            }
         }
     }
 
@@ -96,7 +102,9 @@ public class DeadMap : BaseUnityPlugin
         if (active != activePrev) {
             activePrev = active;
             Sound sound = activePrev ? PlayerAvatar.instance.mapToolController.SoundStart : PlayerAvatar.instance.mapToolController.SoundStop;
-            sound.Play(SpectateCamera.instance.transform.position, 1f, 1f, 1f, 1f);
+            if (SpectateCamera.instance != null) {
+                sound.Play(SpectateCamera.instance.transform.position, 1f, 1f, 1f, 1f);
+            }
         }
 
         // update map instance
@@ -112,18 +120,23 @@ public class DeadMap : BaseUnityPlugin
         CameraTopFade.Instance.Set(0.5f, 0.1f);
 
         // map position and size
-        float currentWidth = width.Value * scale;
-        float currentHeight = height.Value * scale;
-        float x = (Screen.width - currentWidth) / 2;
-        float y = (Screen.height - currentHeight) / 2;
+        float width = Configuration.width.Value * scale;
+        float height = Configuration.height.Value * scale;
+        float x = (Screen.width - width) / 2;
+        float y = (Screen.height - height) / 2;
 
         // draw border
-        Rect border = new(x - borderSize.Value, y - borderSize.Value, currentWidth + borderSize.Value * 2, currentHeight + borderSize.Value * 2);
-        GUI.color = borderColor;
+        Rect border = new(
+            x - Configuration.borderSize.Value,
+            y - Configuration.borderSize.Value,
+            width + Configuration.borderSize.Value * 2,
+            height + Configuration.borderSize.Value * 2
+        );
+        GUI.color = Configuration.borderColor;
         GUI.DrawTexture(border, Texture2D.whiteTexture);
         GUI.color = Color.white;
 
         // draw map
-        GUI.DrawTexture(new Rect(x, y, currentWidth, currentHeight), renderTexture, ScaleMode.StretchToFill, false);
+        GUI.DrawTexture(new Rect(x, y, width, height), renderTexture, ScaleMode.StretchToFill, false);
     }
 }

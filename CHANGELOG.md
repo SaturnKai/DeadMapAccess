@@ -1,5 +1,10 @@
 # Changelog
 
+**Version 1.0.3 (2025-04-06)**
+
+-   Added the ability to view upgrades while the map is open.
+-   Fixed a compatibility issue with the **MoreChances** mod.
+
 **Version 1.0.2 (2025-04-02)**
 
 -   Overhauled map rendering for improved performance.
