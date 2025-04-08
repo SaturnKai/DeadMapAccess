@@ -23,7 +23,7 @@ static class PlayerAvatarPatch
         }
     }
 
-    static IEnumerator LoadMapTexture(Camera camera) {
+    private static IEnumerator LoadMapTexture(Camera camera) {
         RenderTexture renderTexture = camera.activeTexture;
         while (renderTexture == null) {
             yield return null;

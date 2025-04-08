@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DeadMapAccess;
 
-[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0.3")]
+[BepInPlugin("dev.saturnkai.deadmapaccess", "DeadMapAccess", "1.0.4")]
 public class DeadMap : BaseUnityPlugin
 {
     internal static DeadMap Instance { get; private set; } = null!;
@@ -13,11 +13,10 @@ public class DeadMap : BaseUnityPlugin
     internal Harmony? Harmony { get; set; }
     private ManualLogSource _logger => base.Logger;
 
-    // map texture
-    public static RenderTexture? renderTexture = null;
-
-    // map flags
-    public static bool spectating = false;
+    // map values
+    internal static RenderTexture? renderTexture = null;
+    internal static bool spectating = false;
+    internal static bool hideValuables = false;
     private bool active = false;
     private bool activePrev = false;
 
@@ -45,11 +44,6 @@ public class DeadMap : BaseUnityPlugin
     internal void Unpatch() {
         // unpatch
         Harmony?.UnpatchSelf();
-    }
-
-    internal static void SetSpectating(bool isSpectating) {
-        // update spectating state
-        spectating = isSpectating;
     }
 
     private void Update() {
@@ -95,9 +89,8 @@ public class DeadMap : BaseUnityPlugin
         if (active != activePrev) {
             activePrev = active;
             Sound sound = activePrev ? PlayerAvatar.instance.mapToolController.SoundStart : PlayerAvatar.instance.mapToolController.SoundStop;
-            if (SpectateCamera.instance != null) {
+            if (SpectateCamera.instance != null)
                 sound.Play(SpectateCamera.instance.transform.position, 1f, 1f, 1f, 1f);
-            }
         }
 
         // update map instance
@@ -131,5 +124,18 @@ public class DeadMap : BaseUnityPlugin
 
         // draw map
         GUI.DrawTexture(new Rect(x, y, width, height), renderTexture, ScaleMode.StretchToFill, false);
+    }
+
+    internal static void SetSpectating(bool isSpectating) {
+        // update spectating state
+        spectating = isSpectating;
+
+        // toggle valuables
+        if (hideValuables) {
+            MapValuable[] valuables = Map.Instance.OverLayerParent.GetComponentsInChildren<MapValuable>(true);
+            foreach (MapValuable v in valuables) {
+                v.gameObject.SetActive(!spectating);
+            }
+        }
     }
 }

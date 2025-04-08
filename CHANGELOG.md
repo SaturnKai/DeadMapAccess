@@ -1,5 +1,9 @@
 # Changelog
 
+**Version 1.0.4 (2025-04-08)**
+
+-   Added the ability to force hide valuables for all spectating players when you are the host.
+
 **Version 1.0.3 (2025-04-06)**
 
 -   Added the ability to view upgrades while the map is open.
