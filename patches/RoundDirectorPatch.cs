@@ -7,6 +7,6 @@ static class RoundDirectorPatch
 {
     [HarmonyPostfix, HarmonyPatch(nameof(RoundDirector.StartRound))]
     private static void StartRound_Postfix() {
-        DeadMap.disableValuables = false;
+        DeadMap.hideValuables = false;
     }
 }
