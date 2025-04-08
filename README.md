@@ -2,7 +2,7 @@
 
 A mod for **R.E.P.O** that allows dead players to access the map while spectating. For usage, simply use the map key while spectating to see an overlay of the map.
 
-![Thunderstore Version](https://img.shields.io/thunderstore/v/SaturnKai/Dead_Map_Access)
+![Thunderstore Version](https://img.shields.io/thunderstore/v/SaturnKai/Dead_Map_Access?link=https%3A%2F%2Fthunderstore.io%2Fc%2Frepo%2Fp%2FSaturnKai%2FDead_Map_Access%2F)
 
 ## Showcase
 
