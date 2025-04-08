@@ -6,7 +6,7 @@ A mod for **R.E.P.O** that allows dead players to access the map while spectatin
 
 ## Showcase
 
-<img width="720" src="https://github.com/SaturnKai/DeadMapAccess/blob/main/media/usage.gif?raw=true" />
+<img width="720" src="https://github.com/SaturnKai/DeadMapAccess/blob/main/images/usage.gif?raw=true" />
 
 ## Installation
 
