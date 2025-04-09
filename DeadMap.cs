@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DeadMapAccess;
@@ -15,6 +16,9 @@ public class DeadMap : BaseUnityPlugin
 
     // map values
     internal static RenderTexture? renderTexture = null;
+    internal static Camera? camera = null;
+    internal static float cameraOrthographicDefault = 2.5f;
+
     internal static bool spectating = false;
     internal static bool hideValuables = false;
     private bool active = false;
@@ -24,6 +28,11 @@ public class DeadMap : BaseUnityPlugin
     private readonly float scaleSpeed = 5f;
     private float scale = 0.5f;
     private float targetScale = 1f;
+
+    // map zoom
+    private readonly float zoomSpeed = 0.2f;
+    private readonly float zoomMin = 1f;
+    private readonly float zoomMax = 20f;
 
     private void Awake() {
         // init plugin
@@ -74,8 +83,16 @@ public class DeadMap : BaseUnityPlugin
             PlayerController.instance.playerAvatarScript.LastNavmeshPosition = SpectateCamera.instance.player.LastNavmeshPosition;
 
             // show stats
-            if (active && Configuration.showUpgrades.Value) {
+            if (active && Configuration.showUpgrades.Value)
                 StatsUI.instance.Show();
+
+            // map zoom
+            if (active) {
+                float scrollDelta = SemiFunc.InputScrollY() * 0.01f;
+                if (scrollDelta != 0f && camera != null) {
+                    camera.orthographicSize -= scrollDelta * zoomSpeed;
+                    camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, zoomMin, zoomMax);
+                }
             }
         }
     }
@@ -129,6 +146,11 @@ public class DeadMap : BaseUnityPlugin
     internal static void SetSpectating(bool isSpectating) {
         // update spectating state
         spectating = isSpectating;
+
+        // reset camera zoom
+        if (camera != null) {
+            camera.orthographicSize = cameraOrthographicDefault;
+        }
 
         // toggle valuables
         if (hideValuables) {

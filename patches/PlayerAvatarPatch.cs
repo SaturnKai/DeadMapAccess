@@ -12,18 +12,13 @@ static class PlayerAvatarPatch
         // set map to active
         Map.Instance.ActiveParent.SetActive(true);
 
-        // find camera if render texture unset
-        if (DeadMap.renderTexture == null) {
-            Camera[] cameras = GameObject.FindObjectsOfType<Camera>(includeInactive: true);
-            foreach (var camera in cameras) {
-                if (camera.name == "Dirt Finder Map Camera") {
-                    Map.Instance.StartCoroutine(LoadMapTexture(camera));
-                }
-            }
+        // load render texture
+        if (DeadMap.camera != null) {
+            Map.Instance.StartCoroutine(LoadRenderTexture(DeadMap.camera));
         }
     }
 
-    private static IEnumerator LoadMapTexture(Camera camera) {
+    private static IEnumerator LoadRenderTexture(Camera camera) {
         RenderTexture renderTexture = camera.activeTexture;
         while (renderTexture == null) {
             yield return null;
