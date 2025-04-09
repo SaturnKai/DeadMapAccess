@@ -9,6 +9,7 @@ static class MapPatch
 {
     [HarmonyPostfix, HarmonyPatch(nameof(Map.Awake))]
     private static void Awake_Postfix(Map __instance) {
+        // add network controller to map instance
         if (__instance.gameObject.GetComponent<NetworkController>() == null) {
             __instance.gameObject.AddComponent<NetworkController>();
         }
@@ -16,6 +17,7 @@ static class MapPatch
 
     [HarmonyPostfix, HarmonyPatch(nameof(Map.AddValuable))]
     private static void AddValuable_Postfix(Map __instance) {
+        // set new valuable hidden
         if (DeadMap.spectating && DeadMap.hideValuables) {
             MapValuable[] valuables = __instance.OverLayerParent.GetComponentsInChildren<MapValuable>();
             foreach (MapValuable v in valuables) {

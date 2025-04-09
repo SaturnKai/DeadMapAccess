@@ -8,6 +8,7 @@ static class SpectateCameraPatch
 {
     [HarmonyPrefix, HarmonyPatch(nameof(SpectateCamera.StateNormal))]
     private static void StateNormal_Prefix() {
+        // enable spectating
         if ((SemiFunc.RunIsLevel() || SemiFunc.RunIsShop()) && !DeadMap.spectating && SpectateCamera.instance.player != null) {
             DeadMap.SetSpectating(true);
         }

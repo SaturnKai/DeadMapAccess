@@ -7,7 +7,7 @@ namespace DeadMapAccess.patches;
 static class DirtFinderMapPlayerPatch
 {
     [HarmonyPostfix, HarmonyPatch(nameof(DirtFinderMapPlayer.Awake))]
-    private static void StartRound_Postfix(DirtFinderMapPlayer __instance) {
+    private static void Awake_Postfix(DirtFinderMapPlayer __instance) {
         // find camera
         Camera camera = __instance.GetComponentInChildren<Camera>();
         if (camera.name != "Dirt Finder Map Camera") {

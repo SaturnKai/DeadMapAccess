@@ -9,6 +9,7 @@ static class GameDirectorPatch
 {
     [HarmonyPrefix, HarmonyPatch(nameof(GameDirector.Revive))]
     private static void Revive_Prefix() {
+        // disable spectating
         if (DeadMap.spectating) {
             DeadMap.SetSpectating(false);
         }
@@ -16,6 +17,7 @@ static class GameDirectorPatch
 
     [HarmonyPrefix, HarmonyPatch(nameof(GameDirector.gameStateStart))]
     private static void GameStateStart_Prefix() {
+        // hide valuables if set
         if (SemiFunc.IsMasterClient() && Configuration.hideValuables.Value) {
             NetworkController controller = Map.Instance.gameObject.GetComponent<NetworkController>();
             if (controller == null) {
@@ -26,6 +28,7 @@ static class GameDirectorPatch
             controller.photonView.RPC("HideValuables", Photon.Pun.RpcTarget.All, new object[0]{});
         }
 
+        // disable spectating
         if (DeadMap.spectating) {
             DeadMap.SetSpectating(false);
         }
