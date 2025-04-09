@@ -26,9 +26,8 @@ Additional options such as the look and behavior can be set in the config file:
 -   Border size.
 -   Set keybind to toggle or hold.
 -   Display upgrades.
+-   Zoom in and out of the map using the scroll wheel.
 -   Force hide valuables for all spectating players when you are the **host**.
-
-<!-- ![Screenshot]() -->
 
 ## Credits
 

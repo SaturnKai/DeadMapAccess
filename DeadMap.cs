@@ -1,7 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DeadMapAccess;
@@ -56,7 +55,7 @@ public class DeadMap : BaseUnityPlugin
     }
 
     private void Update() {
-        // keybinds
+        // map toggle key
         if (Configuration.toggle.Value && spectating) {
             if (SemiFunc.InputDown(InputKey.Map)) 
                 active = !active;

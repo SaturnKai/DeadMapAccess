@@ -3,6 +3,7 @@
 **Version 1.0.4 (2025-04-08)**
 
 -   Added the ability to force hide valuables for all spectating players when you are the host.
+-   Added the ability to zoom in and out of the map by scrolling.
 
 **Version 1.0.3 (2025-04-06)**
 
